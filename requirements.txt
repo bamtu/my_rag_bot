@@ -1,0 +1,12 @@
+joppy
+langchain
+langchain-classic
+langchain-openai
+langchain-chroma
+langchain-community
+langchain-text-splitters
+rank-bm25
+kiwipiepy
+chromadb
+streamlit
+python-dotenv
