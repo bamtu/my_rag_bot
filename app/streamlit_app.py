@@ -23,9 +23,16 @@ RELOAD_INTERVAL = 300  # 5 minutes
 AUTH_CONFIG_PATH = Path(__file__).resolve().parent / "auth_config.yaml"
 
 
-def _load_authenticator() -> stauth.Authenticate:
+def _load_auth_config() -> dict:
+    """Load auth config from Streamlit secrets (cloud) or yaml file (local)."""
+    if "auth_config_yaml" in st.secrets:
+        return yaml.safe_load(st.secrets["auth_config_yaml"])
     with open(AUTH_CONFIG_PATH, encoding="utf-8") as f:
-        cfg = yaml.safe_load(f)
+        return yaml.safe_load(f)
+
+
+def _load_authenticator() -> stauth.Authenticate:
+    cfg = _load_auth_config()
     return stauth.Authenticate(
         cfg["credentials"],
         cfg["cookie"]["name"],
@@ -186,7 +193,7 @@ def main() -> None:
         st.info("로그인이 필요합니다.")
         st.stop()
 
-    st.title("코디세이 AI 교육과정 도우미")
+    st.title("코디세이 퍼실 도우미 챗봇")
     username = st.session_state["username"]
     with st.sidebar:
         st.write(f"👤 {st.session_state['name']}")

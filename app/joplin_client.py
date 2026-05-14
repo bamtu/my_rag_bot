@@ -9,6 +9,10 @@ from app.config import JOPLIN_TOKEN
 
 
 def get_api() -> ClientApi:
+    if not JOPLIN_TOKEN:
+        raise RuntimeError(
+            "JOPLIN_TOKEN 미설정. .env 또는 환경변수에 토큰을 넣어야 인덱싱 가능."
+        )
     return ClientApi(token=JOPLIN_TOKEN)
 
 

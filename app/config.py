@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Joplin
-JOPLIN_TOKEN = os.environ["JOPLIN_TOKEN"]
+# Joplin (인덱서에서만 사용. Streamlit 런타임에는 불필요해서 optional)
+JOPLIN_TOKEN = os.getenv("JOPLIN_TOKEN")
 # 설정 시 해당 노트(들)만 인덱싱. 콤마 구분으로 여러 ID 가능. 미설정이면 전체 노트.
 _raw_ids = os.getenv("TARGET_NOTE_IDS") or os.getenv("TARGET_NOTE_ID") or ""
 TARGET_NOTE_IDS: list[str] | None = (
