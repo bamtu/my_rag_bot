@@ -20,7 +20,7 @@ from app.config import (
     CHROMA_DIR,
     EMBEDDING_MODEL,
     INDEX_STATE_PATH,
-    TARGET_NOTE_ID,
+    TARGET_NOTE_IDS,
 )
 from app.joplin_client import fetch_notes, get_api
 
@@ -37,37 +37,41 @@ recursive_splitter = RecursiveCharacterTextSplitter(
 )
 
 
+def _header_path(meta: dict) -> str:
+    parts = [meta[k] for k in ("h1", "h2", "h3") if meta.get(k)]
+    return " > ".join(parts)
+
+
 def chunk_note(note: dict) -> list[Document]:
-    """Split a note into chunks using markdown headers, then recursive splitting."""
+    """Split a note by markdown headers; prepend header path to each chunk so
+    embedding and BM25 see the section context (e.g. '1단계 > 팀빌딩')."""
     body = note["body"] or ""
     if not body.strip():
         return []
 
     md_chunks = md_splitter.split_text(body)
-
-    # Fallback: if header splitting yields nothing, treat whole body as one chunk
     if not md_chunks:
         md_chunks = [Document(page_content=body)]
 
     final_chunks = []
     for chunk in md_chunks:
         text = chunk.page_content if isinstance(chunk, Document) else chunk
-        metadata = dict(chunk.metadata) if isinstance(chunk, Document) and chunk.metadata else {}
+        meta = dict(chunk.metadata) if isinstance(chunk, Document) and chunk.metadata else {}
+        section = _header_path(meta)
 
-        if len(text) > 1500:
-            sub_chunks = recursive_splitter.split_text(text)
-            for sc in sub_chunks:
-                final_chunks.append(
-                    Document(
-                        page_content=sc,
-                        metadata={**metadata, "note_id": note["id"], "title": note["title"]},
-                    )
-                )
-        else:
+        sub_texts = recursive_splitter.split_text(text) if len(text) > 1500 else [text]
+
+        for sub in sub_texts:
+            content = f"# {section}\n\n{sub}" if section else sub
             final_chunks.append(
                 Document(
-                    page_content=text,
-                    metadata={**metadata, "note_id": note["id"], "title": note["title"]},
+                    page_content=content,
+                    metadata={
+                        **meta,
+                        "note_id": note["id"],
+                        "title": note["title"],
+                        "section": section,
+                    },
                 )
             )
 
@@ -98,9 +102,9 @@ def dump_bm25_corpus(vs: Chroma) -> None:
 def run() -> None:
     print("Connecting to Joplin...")
     api = get_api()
-    if TARGET_NOTE_ID:
-        print(f"TARGET_NOTE_ID 설정됨 -> 단일 노트만 인덱싱: {TARGET_NOTE_ID}")
-    notes = fetch_notes(api, target_note_id=TARGET_NOTE_ID)
+    if TARGET_NOTE_IDS:
+        print(f"TARGET_NOTE_IDS 설정됨 -> {len(TARGET_NOTE_IDS)}개 노트만 인덱싱: {TARGET_NOTE_IDS}")
+    notes = fetch_notes(api, target_note_ids=TARGET_NOTE_IDS)
     print(f"Fetched {len(notes)} notes from Joplin")
 
     old_state = load_state()
@@ -123,6 +127,7 @@ def run() -> None:
         collection_name="codyssey",
         embedding_function=embeddings,
         persist_directory=str(CHROMA_DIR),
+        collection_metadata={"hnsw:space": "cosine"},
     )
 
     # Delete removed notes

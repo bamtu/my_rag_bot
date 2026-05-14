@@ -5,3 +5,4 @@ __pycache__/
 *.pyc
 *.pkl
 .vscode/
+app/auth_config.yaml

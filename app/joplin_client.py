@@ -37,8 +37,10 @@ def fetch_note(api: ClientApi, note_id: str) -> dict:
     return _to_dict(n)
 
 
-def fetch_notes(api: ClientApi, target_note_id: str | None = None) -> list[dict]:
-    """Fetch notes - either all notes or a single note if target_note_id is given."""
-    if target_note_id:
-        return [fetch_note(api, target_note_id)]
+def fetch_notes(
+    api: ClientApi, target_note_ids: list[str] | None = None
+) -> list[dict]:
+    """Fetch notes - either all notes or the specified subset by ID."""
+    if target_note_ids:
+        return [fetch_note(api, nid) for nid in target_note_ids]
     return fetch_all_notes(api)
