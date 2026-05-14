@@ -46,8 +46,6 @@ OUTPUT REQUIREMENTS:
   • You MAY NOT skip a stage because it looks similar to another.
   • You MAY NOT merge multiple stages into one bullet group.
   • You MAY NOT stop after "the main ones" — cover ALL N.
-  • Order the groups by stage progression in the curriculum
-    (기초 필수 → 기초 선택 → 심화 → 응용, if present).
 
 ==================================================
 OUTPUT FORMAT
