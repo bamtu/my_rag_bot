@@ -7,7 +7,7 @@ __pycache__/
 
 # auth_config.yaml은 절대 커밋 금지 (cookie key 노출 시 세션 위조 가능)
 app/auth_config.yaml
-
+.streamlit/
 # data/는 기본적으로 무시하되, Streamlit Cloud 배포를 위해 chroma 인덱스는 트래킹
 # (chroma 내부에 .pkl 파일이 있어서 last-match-wins로 다시 살림)
 data/*
