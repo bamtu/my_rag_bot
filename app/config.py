@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 # Joplin (인덱서에서만 사용. Streamlit 런타임에는 불필요해서 optional)
 JOPLIN_TOKEN = os.getenv("JOPLIN_TOKEN")
@@ -15,6 +15,9 @@ TARGET_NOTE_IDS: list[str] | None = (
 # OpenAI
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 LLM_MODEL = os.environ["LLM_MODEL"]
+
+# Embeddings — provider: "openai" or "huggingface"
+EMBEDDING_PROVIDER = os.environ["EMBEDDING_PROVIDER"]
 EMBEDDING_MODEL = os.environ["EMBEDDING_MODEL"]
 
 # Retrieval (dense-only, plain top-k similarity)

@@ -9,7 +9,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import (
     MarkdownHeaderTextSplitter,
     RecursiveCharacterTextSplitter,
@@ -18,10 +17,10 @@ from langchain_text_splitters import (
 from app.config import (
     BM25_DOCS_PATH,
     CHROMA_DIR,
-    EMBEDDING_MODEL,
     INDEX_STATE_PATH,
     TARGET_NOTE_IDS,
 )
+from app.embeddings import get_embeddings
 from app.joplin_client import fetch_notes, get_api
 
 HEADERS_TO_SPLIT = [
@@ -121,7 +120,7 @@ def run() -> None:
 
     print(f"Updating {len(to_update)} notes, deleting {len(to_delete)} notes")
 
-    embeddings = OpenAIEmbeddings(model=EMBEDDING_MODEL)
+    embeddings = get_embeddings()
     vs = Chroma(
         collection_name="codyssey",
         embedding_function=embeddings,

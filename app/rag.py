@@ -10,14 +10,14 @@ from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_openai import ChatOpenAI
 
 from app.config import (
     CHROMA_DIR,
-    EMBEDDING_MODEL,
     LLM_MODEL,
     RETRIEVAL_K,
 )
+from app.embeddings import get_embeddings
 
 PROMPT_TEMPLATE = """\
 You are the Codyssey AI Curriculum Assistant. Always answer in Korean.
@@ -156,7 +156,7 @@ def _format_docs(docs: list[Document]) -> str:
 
 def build_chain():
     """Build the RAG chain. Returns (chain, retriever, vs)."""
-    embeddings = OpenAIEmbeddings(model=EMBEDDING_MODEL)
+    embeddings = get_embeddings()
     vs = Chroma(
         collection_name="codyssey",
         embedding_function=embeddings,
