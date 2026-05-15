@@ -27,7 +27,6 @@ from app.joplin_client import fetch_notes, get_api
 HEADERS_TO_SPLIT = [
     ("#", "h1"),
     ("##", "h2"),
-    ("###", "h3"),
 ]
 
 md_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=HEADERS_TO_SPLIT)
@@ -38,7 +37,7 @@ recursive_splitter = RecursiveCharacterTextSplitter(
 
 
 def _header_path(meta: dict) -> str:
-    parts = [meta[k] for k in ("h1", "h2", "h3") if meta.get(k)]
+    parts = [meta[k] for k in ("h1", "h2") if meta.get(k)]
     return " > ".join(parts)
 
 

@@ -14,14 +14,14 @@ TARGET_NOTE_IDS: list[str] | None = (
 
 # OpenAI
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
-LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+LLM_MODEL = os.environ["LLM_MODEL"]
+EMBEDDING_MODEL = os.environ["EMBEDDING_MODEL"]
 
-# Retrieval (dense-only, plain top-k)
-RETRIEVAL_K = int(os.getenv("RETRIEVAL_K", "10"))
+# Retrieval (dense-only, plain top-k similarity)
+RETRIEVAL_K = int(os.environ["RETRIEVAL_K"])
 
 # Admin usernames (comma-separated) — see app/auth_config.yaml for usernames
-ADMIN_USERS = {u.strip() for u in os.getenv("ADMIN_USERS", "admin").split(",") if u.strip()}
+ADMIN_USERS = {u.strip() for u in os.environ["ADMIN_USERS"].split(",") if u.strip()}
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
