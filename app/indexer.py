@@ -20,7 +20,7 @@ from app.config import (
     INDEX_STATE_PATH,
     TARGET_NOTE_IDS,
 )
-from app.embeddings import get_embeddings
+from app.embeddings import get_embeddings, pick_device
 from app.joplin_client import fetch_notes, get_api
 
 HEADERS_TO_SPLIT = [
@@ -120,7 +120,9 @@ def run() -> None:
 
     print(f"Updating {len(to_update)} notes, deleting {len(to_delete)} notes")
 
-    embeddings = get_embeddings()
+    device = pick_device()
+    print(f"Embedding device: {device}")
+    embeddings = get_embeddings(device=device)
     vs = Chroma(
         collection_name="codyssey",
         embedding_function=embeddings,
