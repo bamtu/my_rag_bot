@@ -352,12 +352,3 @@ my_rag_bot/
 | `ADMIN_USERS` | | `admin` | 관리자 권한 username, 콤마 구분 |
 
 ---
-
-## 12. 운영 체크리스트
-
-- [ ] 새 노트 추가 → `.env` `TARGET_NOTE_IDS` 갱신 → `python -m app.indexer`
-- [ ] 기존 노트 수정 → `python -m app.indexer` (증분 자동 감지)
-- [ ] 신규 사용자 등록 → 해시 생성 → `auth_config.yaml` 추가 → 서버 재시작
-- [ ] 청킹·임베딩 정책 변경 → 인덱스 전체 초기화 후 재인덱싱
-- [ ] 매월/매주 `data/usage.db` 또는 admin 사이드바로 비용 확인
-- [ ] 정기적으로 `.env`의 `OPENAI_API_KEY`·`JOPLIN_TOKEN` 회전(보안)
